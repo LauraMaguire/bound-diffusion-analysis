@@ -2,9 +2,10 @@ function [info, plots] = LoadExperiments(Ntrials)
 
 info = cell(Ntrials,1); % create storage location for experiment information
 plots = cell(Ntrials,1); % create storage location for experiment results
+cd('Data');
 trialList = dir; % make a list of all files in current folder
 for n=1:Ntrials % loop over all trials
-    cd('Data'); % navigate to folder for a specific trial
+    cd(trialList(n+3).name); % navigate to folder for a specific trial
     disp(['Opening trial ' trialList(n+3).name ' of ' num2str(Ntrials) '.']);
     infoStructure = load('info.mat'); % import the info
     info{n} = infoStructure.info;
