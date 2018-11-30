@@ -1,7 +1,32 @@
+%% Specify number of experiments to be analyzed
+Ntrials = 16;
+
 %% Prepare the data
 % Load experiment information
-[info, plots] = LoadExperiments(16);
+[info, plots] = LoadExperiments(Ntrials);
 % Load normalized accumulation and profile data
-[acc,pro] = LoadAccAndProfiles(16,plots);
+% The first dimension indexes the experiment number, and the second indexes
+% the channel (1 = green NTF2, 2 = red mCherry)
+[acc,pro, time] = LoadAccAndProfiles(Ntrials,plots);
 
-%%
+%% Load image data
+if exist('images','var')
+    disp('Images have already been loaded.');
+else
+    [images] = LoadImage(Ntrials,info);
+end
+%% Calculate area and perimeter of each gel
+% First run a function that works if the whole gel is in the image
+[masks, area, perimeter] = GelMask(Ntrials,images,1.58);
+
+%% Calculate time constant using perimeter and area data
+tauD = (pi/4)*(area./perimeter).^2;
+
+%% Fit to Mortensen accumulation equation
+fits = AccFitSetup(time, acc, tauD, Ntrials);
+
+%% Calculate partition coefficients and bound probability pb
+[partCoeffs, bProb] = FindBoundProb(fits, Ntrials);
+
+%% Calc
+

@@ -1,4 +1,4 @@
-function [acc, pro] = LoadAccAndProfiles(Ntrials,plots)
+function [acc, pro, time] = LoadAccAndProfiles(Ntrials,plots)
     acc = cell(Ntrials,2);
     pro = cell(Ntrials,2);
 
@@ -7,7 +7,7 @@ function [acc, pro] = LoadAccAndProfiles(Ntrials,plots)
 
     for n=1:Ntrials % loop over all trials
     
-        time{n} = plots{n}.timeAx;
+        time{n} = 60*plots{n}.timeAx; % convert time axis to seconds and save
         pos{n} = plots{n}.posAx;
     
         currentGrnAcc = plots{n}.accumulation(1,:); % name some things for clarity
