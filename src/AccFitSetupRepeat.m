@@ -8,7 +8,7 @@ function [fits] = AccFitSetupRepeat(time, acc, tauD, tau, Ntrials)
         if isnan(tauD(n))
             disp(['Skipping experiment ' num2str(n) ' of ' num2str(Ntrials) '.']);
         else
-        cutoff = find(time{n}<0.2*tau(n), 1, 'last' );
+        cutoff = find(time{n}<0.5*tau(n), 1, 'last' );
         [fitresult, gofcur] = accFitShortTime(time{n}(1:cutoff),acc{n,1}(1:cutoff),tauD(n)); % green data first
         fits.amp(n,1) = fitresult.A;
         fits.D(n,1) = fitresult.D;

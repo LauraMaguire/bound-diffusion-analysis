@@ -22,6 +22,9 @@ end
 %% Calculate time constant using perimeter and area data
 tauD = (pi/4)*(area./perimeter).^2;
 
+%% Calculate partition coefficient using exponential fit
+partCoeffs = ExpCalcPartCoeffs(time,acc, Ntrials);
+
 %% Fit to Mortensen accumulation equation
 fits = AccFitSetup(time, acc, tauD, Ntrials);
 
