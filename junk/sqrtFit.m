@@ -1,4 +1,4 @@
-function [fitresult, gof] = accFit(t, y, tauD, numIterations)
+function [fitresult, gof] = sqrtFit(t, y, tauD)
 %accFit(T,Y)
 %  Create a fit.
 %
@@ -17,21 +17,13 @@ function [fitresult, gof] = accFit(t, y, tauD, numIterations)
 %% Fit: 'untitled fit 1'.
 [xData, yData] = prepareCurveData( t, y );
 
-BesZerosSqr = besselzero(0,numIterations,1).^2;
-xi = 4./BesZerosSqr;
-Gamma = BesZerosSqr.*pi./(16*tauD);
-
 % Set up fittype and options.
-fstring = 'c0*(1';
-for i=1:numIterations
-    fstring = [fstring '-' num2str(xi(i)) '*exp(-' num2str(Gamma(i)) '*D*(t))'];
-end
-fstring = [fstring ')'];
+fstring = ['c0*sqrt(D*t/' num2str(tauD) ')'];
 disp(fstring);
 ft = fittype( fstring, 'independent', 't', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
-opts.Lower = [0 0]; % D c0
+opts.Lower = [0 0]; %  D c0
 opts.StartPoint = [100 1]; % D c0
 
 % Fit model to data.

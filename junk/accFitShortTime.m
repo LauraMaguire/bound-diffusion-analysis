@@ -1,4 +1,4 @@
-function [fitresult, gof] = accFit(t, y, tauD)
+function [fitresult, gof] = accFitShortTime(t, y, tauD)
 %accFit(T,Y)
 %  Create a fit.
 %
@@ -18,6 +18,7 @@ function [fitresult, gof] = accFit(t, y, tauD)
 [xData, yData] = prepareCurveData( t, y );
 
 % Set up fittype and options.
+% fstring = [num2str(partCoeff) '*sqrt((t+T0)*D/' num2str(tauD) ')+A0'];
 fstring = ['A*sqrt((t+T0)*D/' num2str(tauD) ')+A0'];
 ft = fittype( fstring, 'independent', 't', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );

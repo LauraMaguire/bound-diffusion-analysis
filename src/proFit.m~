@@ -1,4 +1,4 @@
-function [fitresult, gof] = ExpFit(t, y, tauD)
+function [fitresult, gof] = proFit(t, y, tauD, Nterms)
 %accFit(T,Y)
 %  Create a fit.
 %
@@ -17,13 +17,24 @@ function [fitresult, gof] = ExpFit(t, y, tauD)
 %% Fit: 'untitled fit 1'.
 [xData, yData] = prepareCurveData( t, y );
 
+BesZeros = besselzero(0,Nterms,1);
+radius = sqrt(16*tauD/pi);
+alpha = BesZeros./radius;
+denom = BesZeros.*besselj(1,BesZeros);
+lifetime = radius^2./BesZeros.^2;
+
 % Set up fittype and options.
-fstring = 'A*(1-exp(-t/T))+C';
+fstring = 'c0*(2';
+for i=1:Nterms
+    fstring = [fstring '-besselj(0,alpha*x)/(BesZeros*besselj(1,BesZeros))'];
+end
+fstring = [fstring ')'];
+disp(fstring);
 ft = fittype( fstring, 'independent', 't', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
-opts.Lower = [0 -Inf 0]; % A C T
-opts.StartPoint = [1 0 100]; % A C T
+opts.Lower = [0 0]; % D c0
+opts.StartPoint = [100 1]; % D c0
 
 % Fit model to data.
 [fitresult, gof] = fit( xData, yData, ft, opts );

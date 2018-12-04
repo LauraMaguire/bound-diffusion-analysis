@@ -1,4 +1,4 @@
-function [fitresult, gof] = accFit(t, y, tauD, numIterations)
+function [fitresult, gof] = accFitFreeDye(t, y, tauD, numIterations)
 %accFit(T,Y)
 %  Create a fit.
 %
@@ -26,13 +26,13 @@ fstring = 'c0*(1';
 for i=1:numIterations
     fstring = [fstring '-' num2str(xi(i)) '*exp(-' num2str(Gamma(i)) '*D*(t))'];
 end
-fstring = [fstring ')'];
+fstring = [fstring ')+c1*exp(-t/T1)'];
 disp(fstring);
 ft = fittype( fstring, 'independent', 't', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
-opts.Lower = [0 0]; % D c0
-opts.StartPoint = [100 1]; % D c0
+opts.Lower = [0 0 0 -Inf]; % D T1 c0 c1
+opts.StartPoint = [100 500 1 0.1]; % D T1 c0 c1
 
 % Fit model to data.
 [fitresult, gof] = fit( xData, yData, ft, opts );

@@ -1,4 +1,4 @@
-function [fitresult, gof] = accFit(t, y, tauD, numIterations)
+function [fitresult, gof] = proFit(x, y, t, tauD, Nterms)
 %accFit(T,Y)
 %  Create a fit.
 %
@@ -15,20 +15,23 @@ function [fitresult, gof] = accFit(t, y, tauD, numIterations)
 
 
 %% Fit: 'untitled fit 1'.
-[xData, yData] = prepareCurveData( t, y );
+[xData, yData] = prepareCurveData( x, y );
 
-BesZerosSqr = besselzero(0,numIterations,1).^2;
-xi = 4./BesZerosSqr;
-Gamma = BesZerosSqr.*pi./(16*tauD);
+BesZeros = besselzero(0,Nterms,1);
+radius = sqrt(16*tauD/pi);
+alpha = BesZeros./radius;
+denom = BesZeros.*besselj(1,BesZeros);
+tOverLifetime = t/(radius^2./BesZeros.^2);
 
 % Set up fittype and options.
-fstring = 'c0*(1';
-for i=1:numIterations
-    fstring = [fstring '-' num2str(xi(i)) '*exp(-' num2str(Gamma(i)) '*D*(t))'];
+fstring = 'c0*(2';
+for i=1:Nterms
+    fstring = [fstring '-(besselj(0,' num2str(alpha(i)) '*x)/'...
+        num2str(denom(i)) ')*exp(-D*' num2str(tOverLifetime(i)) ')'];
 end
 fstring = [fstring ')'];
 disp(fstring);
-ft = fittype( fstring, 'independent', 't', 'dependent', 'y' );
+ft = fittype( fstring, 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.Lower = [0 0]; % D c0
