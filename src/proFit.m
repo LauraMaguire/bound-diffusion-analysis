@@ -1,4 +1,4 @@
-function [fitresult, gof] = proFit(x, y, t, tauD, Nterms)
+function [fitresult, gof] = proFit(x, y, t, tauD, Nterms,limit)
 %accFit(T,Y)
 %  Create a fit.
 %
@@ -15,19 +15,30 @@ function [fitresult, gof] = proFit(x, y, t, tauD, Nterms)
 
 
 %% Fit: 'untitled fit 1'.
-[xData, yData] = prepareCurveData( x, y );
 
 BesZeros = besselzero(0,Nterms,1);
 radius = sqrt(16*tauD/pi);
 alpha = BesZeros./radius;
 denom = BesZeros.*besselj(1,BesZeros);
-tOverLifetime = t/(radius^2./BesZeros.^2);
+TimeConst = BesZeros.^2/radius^2;
+
+I = limit;
+x = 1.58*(1:floor(radius/1.58));
+yy = nan(1,floor(radius/1.58));
+yy(1:length(y)) = y;
+y = fliplr(yy);%./pro{1,n}(1,lim();
+
+[xData, yData] = prepareCurveData( x, y );
+
+
 
 % Set up fittype and options.
 fstring = 'c0*(2';
 for i=1:Nterms
     fstring = [fstring '-(besselj(0,' num2str(alpha(i)) '*x)/'...
-        num2str(denom(i)) ')*exp(-D*' num2str(tOverLifetime(i)) ')'];
+        num2str(denom(i)) ')*exp(-D*' num2str(t) '*' num2str(TimeConst(i)) ')'];
+%     fstring = [fstring '-(besselj(0,' num2str(BesZeros(i)) '*x/r)/'...
+%         num2str(denom(i)) ')*exp(-D*' num2str(t) '*' num2str(BesZeros(i).^2) '/r^2)'];
 end
 fstring = [fstring ')'];
 disp(fstring);

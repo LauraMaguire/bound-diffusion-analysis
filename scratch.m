@@ -76,5 +76,47 @@ for n=1:16
 end
 
 
+%%
+green = (acc{3,1}-acc{3,1}(1));
+green = green./green(end);
+red = (acc{2,2}-acc{2,2}(1));
+red = red./red(end);
+plot(time{3},green)
+hold all
+plot(time{3},red)
+%%
+greenc = (acc{14,1}-acc{14,1}(1));
+greenc = greenc./greenc(end);
+redc = (acc{14,2}-acc{14,2}(1));
+redc = redc./redc(end);
+plot(greenc)
+hold all
+plot(redc)
+
+%%
+t = 50;
+D = 100;
+radius = 800;
+c0 = 2;
+
+BesZeros = besselzero(0,1000,1);
+alpha = BesZeros./radius;
+denom = BesZeros.*besselj(1,BesZeros);
+TimeConst = BesZeros.^2/radius^2;
+
+x = 1:radius;
+y=c0*1;
+for n=1:1000
+    y=y-c0*2*besselj(0,alpha(n).*x).*exp(-D*TimeConst(n)*t)./denom(n);
+end
+
+xx = 1.58*(1:floor(radius/1.58));
+yy  = nan(1,floor(radius/1.58));
+yy(1:416) = pro{2,1}(t,225:end)-pro{2,1}(1,end);
+
+plot(x,y)
+hold all
+plot(xx,fliplr(yy));
+
 
 
