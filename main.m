@@ -1,5 +1,5 @@
 %% Specify number of experiments to be analyzed
-Ntrials = 16;
+Ntrials = 22;
 
 %% Prepare the data
 % Load experiment information
@@ -32,7 +32,7 @@ tauD = (pi/4)*(area./perimeter).^2;
 % Fit is to c(t) = c0(1-sum_i^inf(xi_i*exp(-Gamma_i*D*t))
 % xi_i and Gamma_i are constants
 Nterms = 100;
-fits = AccFitSetup(time, acc, tauD, Ntrials, Nterms);
+fits = AccFitSetupTest(time, acc, tauD, Ntrials, Nterms);
 
 %% Fit early-time NTF2 profiles to erfc equation.
 
@@ -58,8 +58,9 @@ for n=1:Ntrials%[1 2 3 5 9 10 11]
 end
 clear n fitresult
 %% Insert NTF2 results into fits structure
-fits.c0(:,1) = AmpEffAsymptote.';
-fits.D(:,1) = DEffAsymptote.';
+bindExps = [1:7 9:13 16];
+fits.c0(bindExps) = AmpEffAsymptote(bindExps).';
+fits.D(bindExps) = DEffAsymptote(bindExps).';
 %% Calculate partition coefficients
 partCoeffs = FitCalcPartCoeffs(fits, Ntrials);
 

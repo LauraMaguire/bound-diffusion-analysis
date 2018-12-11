@@ -18,35 +18,41 @@ semilogy(test2,'o');
 
 %%
 toggle = 1;
-A = zeros(16,6);
-D = zeros(16,6);
-sse = zeros(16,6);
+A = zeros(Ntrials,6);
+D = zeros(Ntrials,6);
+sse = zeros(Ntrials,6);
+y0 = zeros(Ntrials,6);
 its = [1 10 50 100 500 1000];
-for n=[1 2 3 5 9 10 11]
-    A(:,1) = fits1.A(:,toggle);
+for n=[8 14 17 18 19 20 21 22]
+    A(:,1) = fits1.c0(:,toggle);
     D(:,1) = fits1.D(:,toggle);
-    err(:,1) = fits1000.RMSE(:,toggle);
     err(:,1) = fits1.RMSE(:,toggle);
+    y0(:,1) = fits1.y0(:,toggle);
     
-    A(:,2) = fits10.A(:,toggle);
+    A(:,2) = fits10.c0(:,toggle);
     D(:,2) = fits10.D(:,toggle);
     err(:,2) = fits10.RMSE(:,toggle);
+    y0(:,2) = fits10.y0(:,toggle);
     
-    A(:,3) = fits50.A(:,toggle);
+    A(:,3) = fits50.c0(:,toggle);
     D(:,3) = fits50.D(:,toggle);
     err(:,3) = fits50.RMSE(:,toggle);
+    y0(:,3) = fits50.y0(:,toggle);
     
-    A(:,4) = fits100.A(:,toggle);
+    A(:,4) = fits100.c0(:,toggle);
     D(:,4) = fits100.D(:,toggle);
     err(:,4) = fits100.RMSE(:,toggle);
+    y0(:,4) = fits100.y0(:,toggle);
     
-    A(:,5) = fits500.A(:,toggle);
+    A(:,5) = fits500.c0(:,toggle);
     D(:,5) = fits500.D(:,toggle);
     err(:,5) = fits500.RMSE(:,toggle);
+    y0(:,5) = fits500.y0(:,toggle);
     
-    A(:,6) = fits1000.A(:,toggle);
+    A(:,6) = fits1000.c0(:,toggle);
     D(:,6) = fits1000.D(:,toggle);
     err(:,6) = fits1000.RMSE(:,toggle);
+    y0(:,6) = fits1000.y0(:,toggle);
 end
 
 %% Script that produces accFit result plots
@@ -64,6 +70,11 @@ loglog(its, err(:,:),'-o');
 title('RMSE vs number of terms in fit')
 xlabel('Number of terms in series');
 ylabel('RMSE fit value');
+figure
+loglog(its, abs(y0(:,:)),'-o');
+title('y-offset magnitude vs number of terms in fit')
+xlabel('Number of terms in series');
+ylabel('abs(y0) fit value');
 
 %%
 for n=1:16
