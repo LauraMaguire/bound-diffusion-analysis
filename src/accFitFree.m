@@ -22,7 +22,7 @@ xi = 4./BesZerosSqr;
 Gamma = BesZerosSqr.*pi./(16*tauD);
 
 % Set up fittype and options.
-fstring = 'y0+c0*(1';
+fstring = 'c0*(1';
 for i=1:numIterations
     fstring = [fstring '-' num2str(xi(i)) '*exp(-' num2str(Gamma(i)) '*D*(t))'];
 end
@@ -31,8 +31,8 @@ disp(fstring);
 ft = fittype( fstring, 'independent', 't', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
-opts.Lower = [0 0 -Inf]; % D c0 y0
-opts.StartPoint = [100 1 0]; % D c0 y0
+opts.Lower = [0 0]; % D c0 y0
+opts.StartPoint = [100 1]; % D c0 y0
 
 % Fit model to data.
 [fitresult, gof] = fit( xData, yData, ft, opts );

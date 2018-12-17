@@ -128,6 +128,38 @@ yy(1:416) = pro{2,1}(t,225:end)-pro{2,1}(1,end);
 plot(x,y)
 hold all
 plot(xx,fliplr(yy));
+%%
 
+A = zeros(1,6);
+D = zeros(1,6);
+sse = zeros(1,6);
+y0 = zeros(1,6);
+its = [1 10 50 100 500 1000];
+for n=1:1000
+    A(n) = fitresult{n}.c0;
+%     D(n) = fitresult{n}.D;
+%     err(n) = gof{n}.rmse;
+%     y0(n) = fitresult{n}.y0;
+    
+end
 
-
+%% Script that produces accFit result plots
+loglog(its, A(:,:),'-o');
+title('Equilibrium concentration c0 vs number of terms in fit')
+xlabel('Number of terms in series');
+ylabel('c0 fit value');
+figure
+loglog(its, D(:,:),'-o');
+title('Diffusion constant D vs number of terms in fit')
+xlabel('Number of terms in series');
+ylabel('D fit value');
+figure
+loglog(its, err(:,:),'-o');
+title('RMSE vs number of terms in fit')
+xlabel('Number of terms in series');
+ylabel('RMSE fit value');
+figure
+loglog(its, abs(y0(:,:)),'-o');
+title('y-offset magnitude vs number of terms in fit')
+xlabel('Number of terms in series');
+ylabel('abs(y0) fit value');
